@@ -11,7 +11,7 @@ def get_seller_details():
     bot.close()
     return seller_details
 
-def get_reports(save_to, seller_id=1, report_type="latest"):
+def get_reports(save_to=None, seller_id=1, report_type="latest"):
     bot = Flipkart(save_to)
     bot.landing_page()
     bot.login_page()
@@ -49,6 +49,7 @@ for i in seller_names:
 
 # Getting Reports
 for seller in seller_name_dir:
-    if seller[0] < 3:
+    if seller[0] < 2:
         get_reports(save_to=seller[1], seller_id=seller[0])
+    # get_reports(save_to=seller[1], seller_id=seller[0])
 
