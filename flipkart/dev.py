@@ -1,6 +1,3 @@
-# from cgitb import text
-# from datetime import datetime
-# from xml.dom import NoModificationAllowedErr
 from bs4 import BeautifulSoup
 from selenium import webdriver
 # from selenium.webdriver.support.ui import WebDriverWait
@@ -10,11 +7,9 @@ from selenium.webdriver.common.by import By
 # from selenium.webdriver.common.keys import Keys
 # from selenium.webdriver import ActionChains
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support import expected_conditions as EC
+# from selenium.webdriver.support import expected_conditions as EC
 from flipkart import constant as const
-# from openpyxl import Workbook, load_workbook
-# from pathlib import Path
-# from datetime import date, timedelta
+import datetime
 import time
 import os
 
@@ -40,7 +35,7 @@ class Flipkart(webdriver.Chrome):
             })
         super().__init__(service=self.service, options=chrome_options)
 
-        self.implicitly_wait(15)
+        self.implicitly_wait(8)
         self.maximize_window()
         
 
@@ -101,7 +96,7 @@ class Flipkart(webdriver.Chrome):
         access.click()
         time.sleep(5)
 
-    def earn_more(self, period=None):
+    def earn_more(self, s_name, period="weekly"):
         def close_ad():
             try:
                 skip = self.find_element(
@@ -148,11 +143,15 @@ class Flipkart(webdriver.Chrome):
             close_ad()
         click_download()
         while True:
-            target_dir = self.target_dir + "\\" + "earn_more_report.xlsx"
-            if not os.path.exists(target_dir):
+            target_file = self.target_dir + "\\" + "earn_more_report.xlsx"
+            if not os.path.exists(target_file):
                 print("In while loop")
                 click_download()
                 continue
             else:
                 break
-
+        time_now = datetime.datetime.now()
+        time_formatted = time_now.strftime("%Y-%m-%d_%H-%M")
+        rename_to = self.target_dir + "\\" + s_name + "-" + period + "-" + time_formatted + ".xlsx"
+        os.rename(target_file, rename_to)
+        return rename_to
