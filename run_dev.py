@@ -1,3 +1,4 @@
+from datetime import datetime
 from flipkart.dev import Flipkart
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -34,20 +35,21 @@ def send_email(password, file_name, seller_name):
     password = password
     from_addr = "no-reply@blooprint.in"
     # Comma seperated email ids
-    to_addr = "satyaprakash3636@gmail.com,buffermailid@gmail.com"
-
+    # to_addr = "satyaprakash3636@gmail.com,ajay.m@blooprint.in"
+    to_addr = "buffermailid@gmail.com"
     # To send content of file
     # msg_content = open(FileName).read()
     msg_content = "This is an automated email sent by <b>Python Bot</b>"
-
+    now = datetime.now()
+    date_today = now.strftime("%Y-%m-%d")
     msg = MIMEMultipart('alternative')
     msg['From'] = from_addr
     msg['To'] = to_addr
-    msg['Subject'] = f"Earn More Report - {seller_name.upper()}"
+    msg['Subject'] = f"{seller_name.upper()} | Earn More Report - {date_today}"
 
     msg.attach(MIMEText(msg_content, 'html'))
     attachment = MIMEApplication(open(file_name, "rb").read())
-    attachment.add_header('Content-Disposition','attachment', filename=file_name)
+    attachment.add_header('Content-Disposition','attachment', filename=file_name.split("\\")[-1])
     msg.attach(attachment)
     email_data = msg.as_string()
 
@@ -101,8 +103,8 @@ if old_files:
 
 # Getting Reports
 for seller in seller_name_dir:
-    if seller[0] < 3:
-        downloaded_file = get_reports(seller_name=seller[2], save_to=seller[1], seller_id=seller[0])
+    if seller[0] < 4:
+        downloaded_file = get_reports(seller_name=seller[2], save_to=seller[1], seller_id=seller[0], report_type="weekly")
         print(downloaded_file)
         send_email(const.GMAIL_PASS, downloaded_file, seller[2])
 

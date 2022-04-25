@@ -21,6 +21,9 @@ class Flipkart(webdriver.Chrome):
         self.service = Service(executable_path= "F:\Python_learning\webscraping\chromedriver_win32\chromedriver.exe")
         chrome_options = Options()
         # chrome_options.headless = True
+        window_size = "1920,1080"
+        chrome_options.add_argument("--window-size=%s" % window_size)
+        chrome_options.add_argument("--headless")
         if self.target_dir == None:
             self.target_dir = os.getcwd() + "\defalut_dir"
             if not os.path.exists(self.target_dir):
