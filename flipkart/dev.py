@@ -160,8 +160,11 @@ class Flipkart(webdriver.Chrome):
                 continue
             else:
                 break
-        time_now = datetime.datetime.now()
-        time_formatted = time_now.strftime("%Y-%m-%d_%H-%M")
-        rename_to = self.target_dir + "\\" + s_name + "-" + period + "-" + time_formatted + ".xlsx"
-        os.rename(target_file, rename_to)
-        return rename_to
+        if click_tracker < 11:
+            time_now = datetime.datetime.now()
+            time_formatted = time_now.strftime("%Y-%m-%d_%H-%M")
+            rename_to = self.target_dir + "\\" + s_name + "-" + period + "-" + time_formatted + ".xlsx"
+            os.rename(target_file, rename_to)
+            return rename_to
+        else:
+            return False

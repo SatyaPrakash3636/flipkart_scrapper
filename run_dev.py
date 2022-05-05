@@ -126,7 +126,10 @@ for seller in seller_name_dir:
         downloaded_file = get_reports(seller_name=seller[2], save_to=seller[1], seller_id=seller[0], report_type="weekly")
         print(downloaded_file)
         # send_email(const.GMAIL_PASS, downloaded_file, seller[2])
-        create_update_gsheet(seller[2], downloaded_file)
+        if downloaded_file != False:
+            create_update_gsheet(seller[2], downloaded_file)
+        else:
+            print("Download taking longer time, Skipping....")
 
     # get_reports(save_to=seller[1], seller_id=seller[0])
 
