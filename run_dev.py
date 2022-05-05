@@ -7,6 +7,8 @@ from flipkart import constant as const
 import smtplib as s
 import glob
 import os
+import pandas as pd
+import pygsheets
 
 
 def create_directories(dir_name):
@@ -28,6 +30,7 @@ def get_reports(seller_name, save_to=None, seller_id=1, report_type="latest"):
     bot.close()
     return downloaded_file
 
+# Function for sending email with attachment
 def send_email(password, file_name, seller_name):
     host = "smtp.gmail.com"
     port = 587
@@ -67,6 +70,22 @@ def send_email(password, file_name, seller_name):
     else:
         print("Email sent successfully...")
 
+def create_update_gsheet(seller, excel_file):
+    gc = pygsheets.authorize(service_file='creds.json')
+    df = pd.read_excel(excel_file, engine="openpyxl")
+    files_in_drive = gc.spreadsheet_titles()
+    print(f"Existing files: {files_in_drive}")
+    if seller in files_in_drive:
+        print(f"{seller} already present in drive, deleting and recreating....")
+        sheet = gc.open(seller)
+        sheet.delete()
+    else:
+        print(f"{seller} not present in drive, creating...")
+    sheet = gc.create(title=seller, folder_name="python-test")
+    wksheet = sheet.worksheet(0)
+    wksheet.set_dataframe(df, (1,1), extent=True)
+    wksheet.title = "earn-more-report"
+
 # Directory where all the reports will be downloaded
 main_dir = os.getcwd() + "\earn_more_reports"
 
@@ -103,10 +122,11 @@ if old_files:
 
 # Getting Reports
 for seller in seller_name_dir:
-    if seller[0] < 4:
+    if seller[0] < 11:
         downloaded_file = get_reports(seller_name=seller[2], save_to=seller[1], seller_id=seller[0], report_type="weekly")
         print(downloaded_file)
-        send_email(const.GMAIL_PASS, downloaded_file, seller[2])
+        # send_email(const.GMAIL_PASS, downloaded_file, seller[2])
+        create_update_gsheet(seller[2], downloaded_file)
 
     # get_reports(save_to=seller[1], seller_id=seller[0])
 

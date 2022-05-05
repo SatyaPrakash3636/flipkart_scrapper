@@ -120,7 +120,7 @@ class Flipkart(webdriver.Chrome):
                 download_element = self.find_element(By.XPATH, '//*[@id="sub-app-container"]/section/section[1]/section/div[2]/div[2]/div/button')
                 download_element.click()
                 print("Clicked Download")
-                time.sleep(10)
+                time.sleep(5)
             except:
                 pass
 
@@ -129,7 +129,11 @@ class Flipkart(webdriver.Chrome):
         time.sleep(2)
         close_ad()
         if period == "weekly":
-            pass
+            weekly_element = self.find_element(By.XPATH, '//*[@id="sub-app-container"]/section/section[1]/section/div[1]/div/div/div[2]/div')
+            try:
+                weekly_element.click()
+            except:
+                pass
         elif period == "monthly":
             monthly_element = self.find_element(By.XPATH, '//*[@id="sub-app-container"]/section/section[1]/section/div[1]/div/div/div[3]/div')
             monthly_element.click()
@@ -145,11 +149,14 @@ class Flipkart(webdriver.Chrome):
             # self.get(f'https://seller.flipkart.com/index.html#dashboard/growth/earn-more?selected=latest&startDate={startDate}&endDate={enddate}')
             close_ad()
         click_download()
-        while True:
+        click_tracker = 1
+        while click_tracker <= 10:
             target_file = self.target_dir + "\\" + "earn_more_report.xlsx"
             if not os.path.exists(target_file):
                 print("In while loop")
+                time.sleep(180)
                 click_download()
+                click_tracker += 1
                 continue
             else:
                 break
