@@ -15,11 +15,13 @@ def create_directories(dir_name):
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
 
+
 def get_seller_details():
     bot = Flipkart()
     seller_details = bot.get_all_seller()
     bot.close()
     return seller_details
+
 
 def get_reports(seller_name, save_to=None, seller_id=1, report_type="latest"):
     bot = Flipkart(save_to)
@@ -29,6 +31,7 @@ def get_reports(seller_name, save_to=None, seller_id=1, report_type="latest"):
     downloaded_file = bot.earn_more(seller_name, report_type)
     bot.close()
     return downloaded_file
+
 
 # Function for sending email with attachment
 def send_email(password, file_name, seller_name):
@@ -70,6 +73,7 @@ def send_email(password, file_name, seller_name):
     else:
         print("Email sent successfully...")
 
+
 def create_update_gsheet(seller, excel_file):
     gc = pygsheets.authorize(service_file='creds.json')
     df = pd.read_excel(excel_file, engine="openpyxl")
@@ -85,6 +89,7 @@ def create_update_gsheet(seller, excel_file):
     wksheet = sheet.worksheet(0)
     wksheet.set_dataframe(df, (1,1), extent=True)
     wksheet.title = "earn-more-report"
+
 
 # Directory where all the reports will be downloaded
 main_dir = os.getcwd() + "\earn_more_reports"
